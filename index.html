@@ -163,6 +163,8 @@ tr.dim td{color:var(--muted)}
 .km{display:block;font-size:12px;color:var(--fg2);margin-top:3px;line-height:1.5}
 .km i,.kleg i{font-style:normal;color:var(--muted);margin:0 4px}
 .kleg{margin:0;padding:2px 16px 8px}
+.handoff{margin:0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-dim);border-radius:0 6px 6px 0;font-size:14px;color:var(--fg)}
+.ctxcmp{padding:0 16px 16px}
 .kref{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:8px}
 .kcol{border:1px solid var(--line);border-radius:8px;padding:16px;background:var(--surface)}
 .kcol ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -366,15 +368,15 @@ tr.dim td{color:var(--muted)}
       <h2>各細分市場的保留比例</h2>
     </div>
   </div>
-  <div>
+  <p class="handoff" id="samHand"></p>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd>一年的可服務市場規模。</dd><dt>怎麼算</dt><dd>由上而下：UK TAM 逐項乘上「保留比例」，扣掉智平衡不做的部分（藥物、侵入式醫材、醫院與 NHS 服務、床墊與保健食品等）。</dd><dt>假設</dt><dd>只有「疼痛藥物與設備 0%」（報告明列排除）和「睡眠管理技術 50%」（報告的居家監測佔比）有報告依據，其餘三項是本簡報的判斷，最值得在會議上討論。</dd><dt>對照</dt><dd>報告由下而上的 £16.5 億（NT$710 億）總數接近，但組成不同，見下方對照。</dd></dl><div class="ctxcmp"><div>
     <h2>和報告由下而上的 SAM 對照</h2>
     <div class="cmp">
       <div class="box"><div class="note">由上而下（本頁算法）</div><div class="big" id="cmpTop"></div><div class="note">UK TAM 逐項扣除智平衡不做的部分</div></div>
       <div class="box"><div class="note">由下而上（報告 5.2 節）</div><div class="big">NT$710 億<span class="twd">£16.50 億</span></div><div class="note">5 個模組（億台幣）：服務 241 ＋ 穿戴 57 ＋ 在宅 83 ＋ 智慧衣 57 ＋ <b>企業 B2B 273</b><br><span style="color:var(--muted)">英鎊：5.60 ＋ 1.32 ＋ 1.92 ＋ 1.32 ＋ 6.34 億</span></div></div>
     </div>
     <p class="note" id="cmpNote" style="margin-top:10px"></p>
-  </div>
-  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd>一年的可服務市場規模。</dd><dt>怎麼算</dt><dd>由上而下：UK TAM 逐項乘上「保留比例」，扣掉智平衡不做的部分（藥物、侵入式醫材、醫院與 NHS 服務、床墊與保健食品等）。</dd><dt>假設</dt><dd>只有「疼痛藥物與設備 0%」（報告明列排除）和「睡眠管理技術 50%」（報告的居家監測佔比）有報告依據，其餘三項是本簡報的判斷，最值得在會議上討論。</dd><dt>對照</dt><dd>報告由下而上的 £16.5 億（NT$710 億）總數接近，但組成不同：報告有 38% 是企業 B2B，那是通路不是產品類別。兩個數字可以互相印證規模量級，不能逐項對帳。</dd></dl></details>
+  </div></div></details>
   <p class="src">排除項目取自報告 5 節與附錄 B：處方藥、鴉片類、精神類安眠處方、SCS 植入、手術耗材、醫院級監測。保留比例除了「睡眠管理技術 50%」取自報告的居家監測佔比之外，都是本簡報的假設。</p>
 </section>
 
@@ -384,13 +386,12 @@ tr.dim td{color:var(--muted)}
     <div class="eyebrow">§5 · UK SOM（可獲得市場）＝ SAM × 滲透率</div>
     <h1 id="somTitle"></h1>
   </div>
-  <div class="intent">
-    <div class="icard"><div class="ik">第 3 年 · 切入期</div><div class="ih">驗證模型</div><div class="iv num" id="int3"></div><p>一家倫敦旗艦中心加上線上 D2C，證明「中心建立信任、硬體延伸營收」這套閉環在英國跑得通。0.25% 大約是單店產能上限（約 1,200 名常客）加上線上用戶。</p></div>
-    <div class="icard"><div class="ik">第 5 年 · 成熟期</div><div class="ih">規模化</div><div class="iv num" id="int5"></div><p>擴到 2–3 家中心，再加上高端百貨與 10 家以上企業客戶，證明模型可以複製，在英國非醫材睡眠修復市場建立辨識度。</p></div>
-  </div>
   <div class="grid2">
-    <div style="display:grid;gap:14px">
-      <div class="panel">
+    <div style="display:grid;gap:10px">
+      <div class="formula" id="somFormula"></div>
+      <p class="note" style="margin:0">時間基準：SAM 以 2025–26 年度計算，5 年內不隨市場成長放大；SOM 從進入英國那年起算。</p>
+    </div>
+    <div class="panel">
         <h2>滲透率目標</h2>
         <div id="slPen"></div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
@@ -398,19 +399,23 @@ tr.dim td{color:var(--muted)}
           <div class="scen" id="scen"></div>
         </div>
       </div>
-      <div class="formula" id="somFormula"></div>
-    </div>
-    <div style="display:grid;gap:14px">
+  </div>
+  <div class="intent">
+    <div class="icard"><div class="ik">第 3 年 · 切入期</div><div class="ih">驗證模型</div><div class="iv num" id="int3"></div><p>一家倫敦旗艦中心加上線上 D2C，證明「中心建立信任、硬體延伸營收」這套閉環在英國跑得通。0.25% 大約是單店產能上限（約 1,200 名常客）加上線上用戶。</p></div>
+    <div class="icard"><div class="ik">第 5 年 · 成熟期</div><div class="ih">規模化</div><div class="iv num" id="int5"></div><p>擴到 2–3 家中心，再加上高端百貨與 10 家以上企業客戶，證明模型可以複製，在英國非醫材睡眠修復市場建立辨識度。</p></div>
+  </div>
+  <div class="panel">
+    <h2>逐年營收（進入英國後）</h2>
+    <div class="tw"><table id="yrTable"></table></div>
+  </div>
+  <div class="grid2">
+    <div style="display:grid;gap:14px;grid-column:1/-1">
       <div>
         <h2>營收拆解（依報告各模組佔比）</h2>
         <div class="tw"><table id="somTable"></table></div>
       </div>
       <p class="note"><b>產能檢查：</b>一家 4 間調理室的旗艦中心，全年約 4,500–5,000 人次；每位常客一年來 4 次，約可服務 1,200 名常客，佔 160 萬自費潛在客群的 0.075%。報告再加上線上 D2C 的科技衣與穿戴，把全生態推到 0.25% <span class="tag t-self">中·自述</span>。</p>
     </div>
-  </div>
-  <div class="panel">
-    <h2>逐年營收（進入英國後）</h2>
-    <div class="tw"><table id="yrTable"></table></div>
   </div>
   <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd><b>一年的營收</b>，不是累計。「第 3 年 NT$1.83 億」是切入期結束時每年約 NT$1.83 億，不必除以 3。</dd><dt>SOM 與營收</dt><dd>SOM 是<b>消費者端的銷售額</b>，本頁沿用報告的做法直接稱為營收。自營中心與品牌官網 D2C，消費者付多少智平衡就收多少，SOM 約等於營收；百貨、Boots 等零售通路會抽成（常見 30–50%），企業 B2B 視合約可能有平台或仲介費用，這部分的實際營收會低於 SOM。第 3 年以中心與線上為主，差距不大；第 5 年加入零售與企業通路後，實際營收可能明顯低於 SOM。</dd><dt>為什麼是一年</dt><dd>SAM 是年度市場規模（報告用「年均消費 £350」「年均軟硬體 £110」計算），SAM × 滲透率自然是年營收。報告的營收拆解也是年度量：中心約 1,200 名常客 × 年度套案 £1,000–1,500 ≈ £140 萬；穿戴約 2,000 名訂閱 × 每月 £12 ＋ 硬體 ≈ £38 萬。</dd><dt>時間軸</dt><dd>報告只給兩個時點：切入期（約第 3 年，0.25%）與成熟期（約第 5 年，0.90%），沒有逐年拆分。逐年表中的第 1、2、4 年是本簡報內插的估計值：第 1 年設為第 3 年的 33%（開設旗艦中心、建立通路的爬坡年，營收約為穩定後的三分之一）；第 2 年取第 1、3 年的中間值；第 4 年取第 3、5 年的中間值。缺的年份一律取前後兩個時點滲透率的中間值，整條路徑只用這一條規則。</dd><dt>滲透率依據</dt><dd>0.25% 對應約 4,000–5,000 名生態用戶，受限於一家旗艦中心的產能；0.90% 對應約 1.5–2 萬名用戶，靠 2–3 家中心加上百貨與 D2C 通路。第 5 年的三種情境取自報告附錄 D：保守 0.45%（報告的悲觀情境：經濟衰退、只靠線上 D2C）、持平 0.90%（報告的基準情境）、樂觀 1.60%（社群口碑引爆、拿下大型企業全員福利合約）。</dd></dl></details>
   <p class="src">出處：報告 5.3 節、附錄 C、附錄 D。營收拆解沿用報告各模組的營收佔比，套用到本頁的 SOM；報告原表以其 SAM £16.5 億為基準，金額約低 3%。</p>
@@ -617,6 +622,7 @@ function render(){
 
   // SAM
   const dropShare=1-m.samT/m.ukT;
+  $('samHand').innerHTML=`這 <b>${nt(m.samG)}</b> 是智平衡每年可服務的市場。下一頁：智平衡能拿下其中多少 →`;
   $('samTitle').innerHTML=`UK SAM（2025–26 年度）約 <span class="num">${nt(m.samG)}</span><span class="sub">智平衡能做 UK TAM 當中的 ${pct(1-dropShare)}</span>`;
   $('samTable').innerHTML=`<tr><th>細分市場</th><th class="n">UK TAM</th><th class="n">保留</th><th class="n">SAM</th><th>保留／排除</th></tr>`+
     SEG.map((s,i)=>`<tr class="${m.keep[i]===0?'dim':''}"><td><span class="sw" style="background:${s.col}"></span>${s.name}<div class="rbar"><i style="width:${m.keep[i]*100}%;background:${s.col}"></i></div></td><td class="n">${nt(m.uk[i]/FX)}${gb(m.uk[i]/FX)}</td><td class="n">${pct(m.keep[i])}</td><td class="n">${m.sam[i]?nt(m.sam[i]/FX)+gb(m.sam[i]/FX):'0'}</td><td class="note">${tag(KEEP[i].tag)} 留：${KEEP[i].keep}<br>扣：${KEEP[i].drop}</td></tr>`).join('')+
@@ -632,8 +638,9 @@ function render(){
   // SOM
   $('int3').textContent=`滲透率 ${pct(S.p1,2)} → 年營收 ${ntW(m.som1)}`;
   $('int5').textContent=`滲透率 ${pct(S.p2,2)} → 年營收 ${ntW(m.som2)}`;
-  $('somTitle').innerHTML=`UK SOM（進入英國後）<span class="sub">第 3 年約 <span class="num">${ntW(m.som1)}</span>／年（${gbS(m.som1/1e4)}），第 5 年約 <span class="num">${ntW(m.som2)}</span>／年（${gbS(m.som2/1e4)}）</span>`;
+  $('somTitle').innerHTML=`從 <span class="num">${nt(m.samG)}</span> 的可服務市場，第 3 年拿下 ${pct(S.p1,2)}、第 5 年拿下 ${pct(S.p2,2)}<span class="sub">相當於每年營收 ${ntW(m.som1)} → ${ntW(m.som2)}</span>`;
   setFx('somFormula',[
+    ['','滲透率 ＝ 智平衡年營收佔可服務市場的比例；SOM ＝ SAM × 滲透率',''],
     ['','UK SAM（§4 算出的可服務市場）',`${nt(m.baseG)}${gb(m.baseG)}`],
     [tag('t-self'),`第 3 年（切入期）年營收：SAM × <b>${pct(S.p1,2)}</b>`,`<span class="r">${ntW(m.som1)}</span>${gbW(m.som1)}`],
     [tag('t-self'),`第 5 年（成熟期）年營收：SAM × <b>${pct(S.p2,2)}</b>`,`<span class="r">${ntW(m.som2)}</span>${gbW(m.som2)}`]
