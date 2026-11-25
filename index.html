@@ -159,6 +159,10 @@ tr.dim td{color:var(--muted)}
 .segname{display:flex;align-items:center;gap:0}
 .kgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
 .kgrid.k2{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));padding:4px 14px 14px}
+.kgrid.k3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.km{display:block;font-size:12px;color:var(--fg2);margin-top:3px;line-height:1.5}
+.km i,.kleg i{font-style:normal;color:var(--muted);margin:0 4px}
+.kleg{margin:0;padding:2px 16px 8px}
 .kref{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:8px}
 .kcol{border:1px solid var(--line);border-radius:8px;padding:16px;background:var(--surface)}
 .kcol ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
@@ -437,8 +441,9 @@ tr.dim td{color:var(--muted)}
     <h1>關鍵指標</h1>
   </div>
   <div class="kgrid"><div class="kcol"><h2>市場</h2><ul><li>滲透率<span class="kref">§5</span></li></ul></div><div class="kcol"><h2>營收</h2><ul><li>年營收（SOM）<span class="kref">§5</span></li><li>營收年成長率<span class="kref">§5</span></li><li>各產品線營收佔比<span class="kref">§5</span></li><li>淨營收（扣除通路抽成）<span class="kref">§5</span></li></ul></div><div class="kcol"><h2>用戶與據點</h2><ul><li>活躍生態用戶數<span class="kref">§5</span></li><li>活躍用戶年成長率</li><li>中心數<span class="kref">§5</span></li><li>進入城市數</li></ul></div></div>
-  <details class="ctx"><summary><b>第二層指標</b></summary><div class="kgrid k2"><div class="kcol"><h2>人本中心</h2><ul><li>中心常客數</li><li>常客年回訪次數</li><li>中心產能滿載率</li></ul></div><div class="kcol"><h2>穿戴裝置</h2><ul><li>活躍訂閱數</li></ul></div><div class="kcol"><h2>在宅設備</h2><ul><li>銷售／租賃台數</li></ul></div><div class="kcol"><h2>智慧衣</h2><ul><li>年銷量</li></ul></div><div class="kcol"><h2>企業 B2B</h2><ul><li>簽約數</li></ul></div></div></details>
-  <details class="ctx"><summary><b>第三層指標</b></summary><div class="kgrid k2"><div class="kcol"><h2>財務</h2><ul><li>LTV／CAC</li><li>CAC 回收期</li><li>毛利率</li><li>經常性收入佔比</li></ul></div><div class="kcol"><h2>顧客</h2><ul><li>NPS</li><li>續訂率</li><li>跨品類購買率</li></ul></div><div class="kcol"><h2>營運</h2><ul><li>新店回本期</li><li>新產品線營收佔比</li></ul></div><div class="kcol"><h2>團隊</h2><ul><li>調理師人數與留任率</li><li>數據回饋處方比例</li><li>非醫材宣稱合規率</li></ul></div></div></details>
+  <details class="ctx"><summary><b>第二層指標</b></summary><div class="kgrid k2"><div class="kcol"><h2>顧客獲得</h2><ul><li>新客數</li><li>新增企業客戶數</li><li>獲客管道組成</li></ul></div><div class="kcol"><h2>顧客維繫</h2><ul><li>常客年回訪次數</li><li>訂閱續訂率</li><li>回購率</li></ul></div><div class="kcol"><h2>顧客成長</h2><ul><li>跨品類購買率</li><li>中心到硬體的轉換率</li></ul></div><div class="kcol"><h2>顧客滿意</h2><ul><li>NPS</li></ul></div><div class="kcol"><h2>顧客獲利率</h2><ul><li>LTV／CAC</li><li>CAC 回收期</li></ul></div><div class="kcol"><h2>營收品質</h2><ul><li>毛利率</li><li>經常性收入佔比</li></ul></div></div></details>
+  <details class="ctx"><summary><b>第三層指標</b></summary><p class="note kleg">格式：<b>行動</b>　產出指標<i>／</i>成效指標</p><div class="kgrid k2 k3"><div class="kcol"><h2>顧客經營</h2><ul><li><b>體驗活動（快閃、試用）</b><span class="km">場次、參與人數<i>／</i>轉中心預約率</span></li><li><b>企業 B2B 開發</b><span class="km">提案數<i>／</i>提案成交率、決策週期</span></li><li><b>客戶關懷（回訪、訂閱到期提醒）</b><span class="km">觸達率<i>／</i>提醒後回訪率、續訂率</span></li><li><b>中心內硬體試用</b><span class="km">試用率<i>／</i>試用後購買率</span></li></ul></div><div class="kcol"><h2>營運</h2><ul><li><b>新店開設</b><span class="km">開店準時率<i>／</i>新店達到滿載的月數、新店回本期</span></li><li><b>中心產能管理</b><span class="km">中心產能滿載率<i>／</i>預約等候天數</span></li><li><b>供應鏈與跨境物流</b><span class="km">到貨準時率<i>／</i>缺貨率</span></li></ul></div><div class="kcol"><h2>產品與服務</h2><ul><li><b>數據回饋處方</b><span class="km">數據回饋處方比例<i>／</i>使用處方客人的回訪率差異</span></li><li><b>新產品／新功能上市</b><span class="km">上市數<i>／</i>上市後 6 個月營收、新產品線營收佔比</span></li></ul></div><div class="kcol"><h2>法規</h2><ul><li><b>非醫材宣稱審查</b><span class="km">審查件數<i>／</i>非醫材宣稱合規率</span></li><li><b>產品認證（GPSR、UKCA）</b><span class="km">認證完成數<i>／</i>認證準時率</span></li></ul></div></div></details>
+  <details class="ctx"><summary><b>第四層指標</b></summary><p class="note kleg">格式：<b>行動</b>　產出指標<i>／</i>成效指標</p><div class="kgrid k2 k3"><div class="kcol"><h2>人才</h2><ul><li><b>調理師培訓</b><span class="km">培訓時數<i>／</i>手法認證通過率、調理師留任率</span></li><li><b>英國在地團隊招募</b><span class="km">到位人數<i>／</i>在地團隊到位率</span></li></ul></div><div class="kcol"><h2>數據</h2><ul><li><b>數據平台建置</b><span class="km">建置進度<i>／</i>統一客戶編號覆蓋率、資料完整率</span></li></ul></div><div class="kcol"><h2>組織</h2><ul><li><b>品牌語言轉譯培訓</b><span class="km">培訓完成率<i>／</i>行銷素材一次審查通過率</span></li><li><b>目標對齊</b><span class="km">對齊會議次數<i>／</i>跨團隊目標對齊率</span></li></ul></div></div></details>
 </section>
 
 </main>
