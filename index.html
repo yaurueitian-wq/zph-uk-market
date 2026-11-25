@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>智平衡 UK 市場規模</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: one slide per screen, analyst-dashboard look; conclusion as title, evidence tag on every number */
+:root{
+  --bg:#080D17; --surface:#0E1524; --surface2:#131C2F; --line:#1E2A42; --line2:#2A3956;
+  --fg:#E6ECF5; --fg2:#A9B6CC; --muted:#6F7F9A;
+  --accent:#60A5FA; --accent-dim:rgba(96,165,250,.14);
+  --ok:#34D399; --warn:#FBBF24; --bad:#F87171; --hot:#FB923C;
+  --c1:#3B82F6; --c2:#0FA899; --c3:#8B5CF6; --c4:#E25C9B; --c5:#B9893A;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.6;display:flex;flex-direction:column}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.num,.mono,td.n,th.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:16px;padding-block:10px;flex-wrap:wrap}
+.brand{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--fg2);text-transform:uppercase}
+.brand b{color:var(--accent);font-weight:600}
+.dots{display:flex;gap:4px;flex:1;min-width:0;justify-content:center;flex-wrap:wrap}
+.dot{font-family:var(--mono);font-size:11px;color:var(--muted);background:none;border:1px solid transparent;border-radius:4px;padding:2px 7px;cursor:pointer}
+.dot:hover{color:var(--fg);border-color:var(--line2)}
+.dot[aria-current="true"]{color:var(--bg);background:var(--accent)}
+.moved{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--fg2)}
+.chip{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--fg2)}
+.chip.on{border-color:var(--hot);color:var(--hot)}
+button.btn{font:inherit;font-size:12px;color:var(--fg);background:var(--surface2);border:1px solid var(--line2);border-radius:6px;padding:4px 10px;cursor:pointer}
+button.btn:hover{border-color:var(--accent)}
+button.btn:disabled{opacity:.4;cursor:default}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* slides */
+main{flex:1;min-height:0;overflow:auto}
+.slide{max-width:1240px;margin:0 auto;padding-block:28px 40px;display:flex;flex-direction:column;gap:22px}
+.eyebrow{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.06em}
+h1{font-size:clamp(22px,2.6vw,32px);line-height:1.3;font-weight:700;margin:4px 0 0;text-wrap:balance;max-width:28em}
+h1 .num{color:var(--accent)}
+h1 .sub{display:block;font-size:.62em;font-weight:500;color:var(--fg2);margin-top:6px}
+.lede{color:var(--fg2);max-width:62em;margin:0}
+h2{font-size:13px;font-family:var(--mono);font-weight:600;color:var(--fg2);letter-spacing:.06em;margin:0 0 10px;text-transform:uppercase}
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px;align-items:start}
+.grid2>*{min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px}
+.note{font-size:13px;color:var(--fg2)}
+.note b{color:var(--fg)}
+.formula{font-family:var(--mono);font-size:14px;background:var(--surface2);border:1px solid var(--line2);border-radius:6px;padding:12px 14px;line-height:1.8;overflow-x:auto}
+.formula .r{color:var(--accent);font-weight:600}
+.fx{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 12px;align-items:baseline;font-size:13.5px;line-height:1.5}
+.fx .t{font-family:var(--sans)}
+.fx .e{color:var(--fg2);font-family:var(--sans)}
+.fx .e b{font-family:var(--mono);font-weight:400;color:var(--fg)}
+.fx .v{text-align:right;white-space:nowrap}
+.fx .hr{grid-column:1/-1;border-top:1px solid var(--line2);margin:2px 0}
+.fx .tot{font-family:var(--sans);font-weight:700;color:var(--fg)}
+.fx .v.r .twd{display:block;margin-left:0}
+.twd{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.72em;font-weight:400;color:var(--fg2);white-space:nowrap;margin-left:.4em}
+h1 .twd{font-size:.55em;color:var(--fg2)}
+.fstep .twd{display:block;margin-left:0;font-size:12px}
+td .twd{display:block;margin-left:0;font-size:11px}
+.src{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.ctx{border:1px solid var(--line2);border-radius:8px;background:var(--surface)}
+.ctx summary{cursor:pointer;padding:10px 14px;font-size:13px;color:var(--fg2);list-style:none;display:flex;gap:8px;align-items:center}
+.ctx summary::-webkit-details-marker{display:none}
+.ctx summary::before{content:"▸";color:var(--accent);font-family:var(--mono);transition:transform .15s}
+.ctx[open] summary::before{transform:rotate(90deg)}
+.ctx summary b{color:var(--fg);font-weight:500}
+.ctx dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;margin:0;padding:4px 16px 14px;font-size:13px}
+.ctx dt{font-family:var(--mono);font-size:11.5px;color:var(--accent);letter-spacing:.04em;padding-top:2px;white-space:nowrap}
+.ctx dd{margin:0;color:var(--fg2)}
+.ctx dd b{color:var(--fg);font-weight:500}
+@media (max-width:520px){.ctx dl{grid-template-columns:minmax(0,1fr)}.ctx dt{padding-top:6px}}
+
+/* tables */
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-weight:500;color:var(--muted);font-size:12px;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right;white-space:nowrap}
+tr.sum td{border-top:1px solid var(--line2);border-bottom:none;font-weight:700}
+tr.sum td.n{color:var(--accent)}
+tr.dim td{color:var(--muted)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:0}
+
+/* evidence tags */
+.tag{font-family:var(--sans);font-size:11.5px;white-space:nowrap;padding:1px 6px;border-radius:4px;border:1px solid}
+.t-ver{color:var(--ok);border-color:rgba(52,211,153,.4)}
+.t-self{color:var(--accent);border-color:rgba(96,165,250,.4)}
+.t-inf{color:var(--warn);border-color:rgba(251,191,36,.4)}
+.t-hyp{color:var(--hot);border-color:rgba(251,146,60,.4)}
+.t-none{color:var(--bad);border-color:rgba(248,113,113,.4)}
+.legend-tags{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;color:var(--fg2);align-items:center}
+
+/* stacked bar */
+.bar{display:flex;gap:2px;height:30px;border-radius:4px;overflow:hidden}
+.bar>div{min-width:2px;position:relative;cursor:default}
+.bar>div:first-child{border-radius:4px 0 0 4px}.bar>div:last-child{border-radius:0 4px 4px 0}
+.hatch{background-image:repeating-linear-gradient(135deg,rgba(8,13,23,.55) 0 3px,transparent 3px 7px)}
+.axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px}
+
+/* sliders */
+.sl{display:grid;gap:6px;padding:12px 0;border-bottom:1px solid var(--line)}
+.sl:last-child{border-bottom:none}
+.sl-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sl-h label{font-weight:500;font-size:14px;flex:1;min-width:10em}
+.sl-v{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--fg)}
+.sl.moved-on .sl-v{color:var(--hot)}
+.sl-trk{position:relative;padding-block:16px 6px}
+.sl-trk .sl-anchor{top:12px}
+.sl input[type=range]{width:100%;margin:0;accent-color:var(--accent);position:relative;z-index:1;background:transparent}
+.sl-band{position:absolute;top:50%;height:8px;transform:translateY(-50%);background:var(--accent-dim);border-radius:4px}
+.sl-anchor{position:absolute;top:0;bottom:0;width:2px;background:var(--fg2);transform:translateX(-1px)}
+.sl-anchor::after{content:"錨";position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--fg2)}
+.sl-f{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.sl-reset{font:inherit;font-size:12px;background:none;border:none;color:var(--hot);cursor:pointer;padding:0;text-decoration:underline}
+.sl-reset[hidden]{display:none}
+
+/* product cards */
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.card .k{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.card h3{margin:0;font-size:16px}
+.card .en{font-size:12px;color:var(--muted)}
+.card p{margin:0;font-size:13px;color:var(--fg2)}
+.card .map{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line2);font-size:12px;color:var(--fg2)}
+.paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.path{border:1px solid var(--line);border-radius:8px;padding:14px;font-size:13px;color:var(--fg2)}
+.path h4{margin:0 0 6px;font-size:14px;color:var(--fg)}
+.path.x{opacity:.75}.path.x h4::before{content:"✕ ";color:var(--bad)}
+.path.y{border-color:var(--accent);background:var(--accent-dim)}.path.y h4::before{content:"● ";color:var(--accent)}
+
+/* cover */
+.cover{min-height:62vh;justify-content:center}
+.cover h1{font-size:clamp(28px,4vw,48px);max-width:18em}
+.funnel{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin-top:8px}
+.fstep{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-width:120px}
+.fstep .k{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.fstep .v{font-family:var(--mono);font-size:20px;font-weight:600}
+.farrow{align-self:center;color:var(--muted);font-family:var(--mono)}
+
+/* SAM retain bars */
+.rbar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
+.rbar>i{display:block;height:100%;border-radius:4px}
+.segname{display:flex;align-items:center;gap:0}
+.kgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+.kgrid.k2{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));padding:4px 14px 14px}
+.kref{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:8px}
+.kcol{border:1px solid var(--line);border-radius:8px;padding:16px;background:var(--surface)}
+.kcol ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.kcol li{font-size:14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.kcol li:last-child{border-bottom:none;padding-bottom:0}
+@media (max-width:900px){.kgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.kgrid{grid-template-columns:minmax(0,1fr)}}
+.intent{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.icard{border:1px solid var(--line2);border-radius:8px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.icard .ik{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.icard .ih{font-size:18px;font-weight:700;color:var(--hot)}
+.icard .iv{font-size:13px;color:var(--fg)}
+.icard p{margin:4px 0 0;font-size:13px;color:var(--fg2)}
+@media (max-width:520px){.intent{grid-template-columns:minmax(0,1fr)}}
+
+/* compare */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cmp .box{border:1px solid var(--line2);border-radius:8px;padding:14px}
+.cmp .big{font-family:var(--mono);font-size:26px;font-weight:600}
+.delta{font-family:var(--mono);color:var(--warn)}
+
+/* scenario chips */
+.scen{display:flex;gap:8px;flex-wrap:wrap}
+.scen button{font:inherit;font-size:12px;border:1px solid var(--line2);background:var(--surface2);color:var(--fg);border-radius:999px;padding:4px 12px;cursor:pointer}
+.scen button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:6px;overflow:hidden}
+.seg button{font:inherit;font-size:12px;border:none;background:none;color:var(--fg2);padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+
+/* rings */
+.rings svg{width:100%;height:auto;max-width:100%;display:block}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:14px}
+.kpi .k{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.kpi .v{font-family:var(--mono);font-size:24px;font-weight:600}
+.kpi .s{font-size:12px;color:var(--fg2)}
+
+/* issues list */
+.issues{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.issues li{border-left:2px solid var(--bad);padding:6px 0 6px 12px;font-size:13px;color:var(--fg2)}
+.issues li b{color:var(--fg)}
+
+/* bottom nav */
+.foot{border-top:1px solid var(--line);background:var(--bg);padding-bottom:env(safe-area-inset-bottom,0px)}
+.foot-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding-block:8px;gap:12px}
+.foot .cnt{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+#tip{position:fixed;z-index:20;pointer-events:none;background:var(--surface2);border:1px solid var(--line2);border-radius:6px;padding:8px 10px;font-size:12px;color:var(--fg);max-width:260px;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#tip .num{color:var(--accent)}
+
+@media (max-width:900px){
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .paths,.kpis{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:520px){
+  .cards,.cmp{grid-template-columns:minmax(0,1fr)}
+  .dots{justify-content:flex-start}
+  .brand{display:none}
+}
+@media (prefers-reduced-motion:no-preference){
+  .slide.enter{animation:in .28s ease-out}
+  @keyframes in{from{transform:translateY(6px)}to{transform:none}}
+}
+</style>
+</head>
+<body>
+
+
+<header class="top gut">
+  <div class="top-in">
+    <div class="brand"><b>智平衡</b> · UK 市場規模</div>
+    <nav class="dots" id="dots" aria-label="章節"></nav>
+    <div class="moved">
+      <span class="chip" id="movedChip">0 個假設已移動</span>
+      <button class="btn" id="resetAll" type="button">全部回到錨點</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- 0 cover -->
+<section class="slide cover gut" data-id="cover" data-label="封面">
+  <div class="eyebrow">§0 · 智平衡健康管理集團 · 英國拓展</div>
+  <h1>從 TAM → SAM → SOM<br>總潛在市場、可服務市場、可獲得市場</h1>
+  <p class="lede">每個數字都標了出處等級。拉桿的起點是報告數字或我們的推論（錨點），會議中可以移動拉桿，討論假設該放在哪裡；右上角會顯示有幾個假設被移動過。</p>
+  <div class="funnel" id="coverFunnel"></div>
+  <div class="legend-tags">
+    <span class="tag t-ver">查證</span>報告引用的機構數據（本簡報未回溯原始報告）
+    <span class="tag t-self">中·自述</span>報告自行估計，無外部出處
+    <span class="tag t-inf">推論</span>由報告數字推導
+    <span class="tag t-hyp">假設</span>本簡報設定，可討論
+    <span class="tag t-none">查無</span>報告沒有對應數字
+  </div>
+  <p class="src">資料來源：《智平衡健康管理集團：全球睡眠與疼痛改善市場研究暨英國拓展戰略報告》。匯率 £1 = $1.27，由報告「£16.5 億 ≈ $20.96 億」反推 <span class="tag t-inf">推論</span>。台幣換算 £1 ≈ NT$43，取 2026-11-23 中間價（約 42.95，近一週 42.95–43.52）<span class="tag t-ver">查證</span>，實際銀行匯率會有價差。用 ← → 鍵或下方按鈕翻頁。</p>
+</section>
+
+<!-- 1 products -->
+<section class="slide gut" data-id="products" data-label="產品" hidden>
+  <div>
+    <div class="eyebrow">§1 · 組織服務／產品</div>
+    <h1>一個服務、三件硬體，全部走非醫材路線</h1>
+  </div>
+  <p class="lede">四條產品線互相導流：中心建立信任，穿戴提供數據，在宅設備與智慧衣把調理延伸到日常生活。硬體只需符合 GPSR 與 CE/UKCA 消費品規範，不送 MHRA 醫療器材審查，報告估計上市週期約 1–3 個月 <span class="tag t-self">中·自述</span>。</p>
+  <div class="cards">
+    <div class="card"><span class="k">服務</span><h3>拉菲爾人本中心</h3><span class="en">Integrative Wellness &amp; Bodywork Center</span><p>中醫經絡穴位結合現代解剖物理手法；純徒手、非侵入、零藥物的肌筋膜放鬆與自律神經調和。</p><div class="map"><span class="sw" style="background:var(--c5)"></span>對應：門診復健與身心調理</div></div>
+    <div class="card"><span class="k">硬體 · 穿戴</span><h3>生命徵象穿戴式裝置</h3><span class="en">Vitality &amp; Recovery Tracker</span><p>對標 Oura、WHOOP；連續監測 HRV、體溫趨勢、活動與睡眠結構，提供 Recovery 分數，不宣稱診斷。</p><div class="map"><span class="sw" style="background:var(--c2)"></span>對應：睡眠管理技術</div></div>
+    <div class="card"><span class="k">硬體 · 居家</span><h3>自主神經在宅設備</h3><span class="en">At-Home Bio-Frequency Relaxation Device</span><p>以物理生物頻率、低頻微振動或穴位反饋，協助居家舒緩交感神經、促進入睡。</p><div class="map"><span class="sw" style="background:var(--c1)"></span>對應：睡眠健康消費品 <span class="tag t-inf">推論</span></div></div>
+    <div class="card"><span class="k">硬體 · 紡織</span><h3>睡眠及疼痛改善智慧衣</h3><span class="en">Microcirculation &amp; Recovery Apparel</span><p>生物陶瓷遠紅外線結合經絡包覆加壓，促進局部微循環、舒緩肌肉痠痛、維持夜間微氣候。</p><div class="map"><span class="sw" style="background:var(--c1)"></span>對應：睡眠健康消費品<br><span class="sw" style="background:var(--c4)"></span>部分替代：外用止痛與舒緩</div></div>
+  </div>
+  <div>
+    <h2>定位決定 SAM 的邊界</h2>
+    <div class="paths">
+      <div class="path x"><h4>路徑 A：化學藥物</h4>口服鎮痛藥、NSAIDs、處方安眠藥。智平衡不做，SAM 中扣除。</div>
+      <div class="path x"><h4>路徑 B：侵入式醫材</h4>脊髓刺激器 SCS、射頻消融、醫院級監測。智平衡不做，SAM 中扣除。</div>
+      <div class="path y"><h4>路徑 C：智平衡</h4>非醫材穿戴、在宅、科技衣加上自然物理手法中心。這是 SAM 保留的部分。</div>
+    </div>
+  </div>
+  <p class="src">出處：報告第 1 節、第 4.1 節。在宅設備在報告 3.1 節另列「居家健康調理設備 120 億美元」，但這個數字沒有計入 TAM 加總，所以本簡報把它歸入睡眠健康消費品。</p>
+</section>
+
+<!-- 2 global TAM -->
+<section class="slide gut" data-id="global" data-label="全球 TAM" hidden>
+  <div>
+    <div class="eyebrow">§2 · 全球 TAM（總潛在市場）</div>
+    <h1>全球 TAM（2025–26 年度）約 <span class="num">2,690</span> 億美元</h1>
+  </div>
+  <div class="panel">
+    <h2>五個細分市場加總（億美元）</h2>
+    <div class="bar" id="gBar"></div>
+    <div class="axis"><span>0</span><span>1,000</span><span>2,000</span><span>2,690</span></div>
+  </div>
+  <div class="grid2">
+    <div class="tw"><table id="gTable"></table></div>
+    <div style="display:grid;gap:14px">
+      <div class="formula fx">
+        <span class="t"></span><span class="e">睡眠消費品 <b>750</b> ＋ 睡眠科技 <b>63</b> ＋ 疼痛藥物與設備 <b>753</b> ＋ 外用止痛 <b>124</b> ＋ 門診復健 <b>1,000</b></span><span class="v"></span>
+        <span class="hr"></span>
+        <span class="tot" style="grid-column:1/3">全球 TAM</span><span class="v r">2,690 億美元</span>
+      </div>
+      <p class="note">基準年混用 2025 與 2026，報告原本就是直接相加，這裡沿用同樣做法。</p>
+    </div>
+  </div>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd><b>一年</b>的市場規模（各研究機構估計的全年銷售額），不是累計。</dd><dt>基準年</dt><dd>睡眠消費品、外用止痛為 2026 年；睡眠科技、疼痛藥物與設備為 2025 年；門診復健未註明。報告直接相加，本簡報沿用。</dd><dt>範圍</dt><dd>藥物、醫材、消費品、專業服務的<b>全部支出</b>，所以 TAM 會遠大於智平衡實際能做的市場，§4 會再扣掉。</dd><dt>限制</dt><dd>門診復健 1,000 億是報告自述的保守估計，沒有出處，卻佔 TAM 的 37%，是整條推論中最弱的一環。</dd><dt>外部參考</dt><dd>Statista 顯示光是 UK 的「非住院醫療服務提供者整體」2026 年就有 $987.6 億，和報告的全球 1,000 億相當。可見報告的 1,000 億只涵蓋「復健與身心調理」這個窄範圍，不是整個門診醫療；本簡報也是照這個窄範圍使用。UK 層級的比對見 §4a。</dd></dl></details>
+  <p class="src">出處：報告 5.1 節、附錄 A（Stratistics MRC、Future Market Insights、The Insight Partners）。</p>
+</section>
+
+<!-- 3 Europe TAM -->
+<section class="slide gut" data-id="europe" data-label="歐洲 TAM" hidden>
+  <div>
+    <div class="eyebrow">§3 · 歐洲 TAM（總潛在市場，含 UK）</div>
+    <h1 id="euTitle"></h1>
+  </div>
+  <div class="panel">
+    <h2>歐洲 TAM 組成（億美元）· 斜紋為推論</h2>
+    <div class="bar" id="euBar"></div>
+  </div>
+  <div class="grid2">
+    <div class="tw"><table id="euTable"></table></div>
+    <div style="display:grid;gap:14px">
+      <div class="formula" id="euFormula"></div>
+      <div class="panel" id="slEu"></div>
+      <p class="note"><b>28% 的由來：</b>報告有歐洲數字的兩項，佔比分別是 210/750 = 28.0%、18/63 = 28.6%，所以把 28% 套到另外三項。疼痛與復健市場通常北美比重較高，歐洲可能落在 25–30%（拉桿上的淺色帶）。拉桿只影響推論的部分，查證的 228 億固定不動。</p>
+    </div>
+  </div>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd>一年的市場規模，基準年與全球 TAM 相同（2025／2026 混用）。</dd><dt>怎麼算</dt><dd>有歐洲數字的兩項直接用（210 ＋ 18 ＝ 228 億）；其他三項沒有區域拆分，用全球值 × 歐洲佔比推估。</dd><dt>假設</dt><dd>歐洲佔比 28% 取自報告中有區域數字的兩項（28.0%、28.6%），等於假設疼痛、外用、門診三個市場的區域分布和睡眠市場一樣。</dd><dt>限制</dt><dd>疼痛與醫療服務市場通常北美比重較高，歐洲實際可能偏低，拉桿上的淺色帶 25–30% 是建議的討論範圍。</dd></dl></details>
+  <p class="src">出處：報告 2.1 節區域表、5.1 節。</p>
+</section>
+
+<!-- 4 UK TAM -->
+<section class="slide gut" data-id="uk-tam" data-label="UK TAM" hidden>
+  <div>
+    <div class="eyebrow">§4a · UK TAM（總潛在市場）· 從歐洲到英國</div>
+    <h1 id="ukTitle"></h1>
+  </div>
+  <div class="grid2">
+    <div class="tw"><table id="ukTable"></table></div>
+    <div style="display:grid;gap:14px">
+      <div class="formula" id="ukFormula"></div>
+      <div class="panel" id="slUk"></div>
+      <p class="note"><b>錨點 13% 的由來：</b>英國人口約 6,700 萬，約佔歐洲 7.4 億人口的 9%，這是下限；英國經濟規模約佔歐洲 13–14%，健康消費多半跟著所得走，所以錨在 13% <span class="tag t-hyp">假設</span>。報告附錄 B 提到「UK 佔高收入國家消費力 3.0–3.5%」，但沒有說明怎麼換算到 TAM，這裡不採用。</p>
+    </div>
+  </div>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd>一年的市場規模。</dd><dt>怎麼算</dt><dd>歐洲 TAM × UK 佔歐洲比例，再換成英鎊與台幣。報告沒有 UK TAM，這一層是本簡報補的。</dd><dt>假設</dt><dd>UK 佔比錨在 13%：人口佔歐洲約 9%（下限），經濟規模約 13–14%；健康自費支出多半跟著所得走，所以取接近經濟比重的值。</dd><dt>匯率</dt><dd>£1 = $1.27 由報告「£16.5 億 ≈ $20.96 億」反推；£1 ≈ NT$43 取 2026-11-23 中間價。匯率變動 ±5%，台幣金額同步變動 ±5%。</dd><dt>交叉驗證</dt><dd>以「門診復健與身心調理」這一項為例，三個來源的量級比較：<br>① 本簡報由上而下推算：全球 1,000 億 × 28% × 13% ≈ <b>$36.4 億</b>（£28.7 億）<br>② 報告 3.1 節「英國自費理療約 £35 億」≈ <b>$44.5 億</b>：和 ① 落在同一量級，① 約低 18%<br>③ Statista「UK 非住院醫療服務提供者整體」2026 年 <b>$987.6 億</b>：包含 GP 診所、牙科、居家醫療，範圍遠大於本項，只能當上限；其中大部分屬醫療體系，到 SAM 也會扣除。同來源的「UK 醫院門診服務」為 $619.4 億，兩者分類不同，不能相加<br><span style="color:var(--muted)">③ 取自 Statista AI 摘要，正式引用前需回原始統計頁確認數字與定義。</span></dd></dl></details>
+  <p class="src">人口取自報告 2.2 節；歐洲人口與經濟比重是一般公開統計的概略值，未逐一查證。</p>
+</section>
+
+<!-- 5 UK SAM -->
+<section class="slide gut" data-id="sam" data-label="UK SAM" hidden>
+  <div>
+    <div class="eyebrow">§4 · UK SAM（可服務市場）＝ UK TAM − 非服務／產品項目</div>
+    <h1 id="samTitle"></h1>
+  </div>
+  <div class="grid2">
+    <div style="display:grid;gap:14px">
+      <div class="tw"><table id="samTable"></table></div>
+      <div class="formula" id="samFormula"></div>
+    </div>
+    <div class="panel" id="slKeep">
+      <h2>各細分市場的保留比例</h2>
+    </div>
+  </div>
+  <div>
+    <h2>和報告由下而上的 SAM 對照</h2>
+    <div class="cmp">
+      <div class="box"><div class="note">由上而下（本頁算法）</div><div class="big" id="cmpTop"></div><div class="note">UK TAM 逐項扣除智平衡不做的部分</div></div>
+      <div class="box"><div class="note">由下而上（報告 5.2 節）</div><div class="big">NT$710 億<span class="twd">£16.50 億</span></div><div class="note">5 個模組（億台幣）：服務 241 ＋ 穿戴 57 ＋ 在宅 83 ＋ 智慧衣 57 ＋ <b>企業 B2B 273</b><br><span style="color:var(--muted)">英鎊：5.60 ＋ 1.32 ＋ 1.92 ＋ 1.32 ＋ 6.34 億</span></div></div>
+    </div>
+    <p class="note" id="cmpNote" style="margin-top:10px"></p>
+  </div>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd>一年的可服務市場規模。</dd><dt>怎麼算</dt><dd>由上而下：UK TAM 逐項乘上「保留比例」，扣掉智平衡不做的部分（藥物、侵入式醫材、醫院與 NHS 服務、床墊與保健食品等）。</dd><dt>假設</dt><dd>只有「疼痛藥物與設備 0%」（報告明列排除）和「睡眠管理技術 50%」（報告的居家監測佔比）有報告依據，其餘三項是本簡報的判斷，最值得在會議上討論。</dd><dt>對照</dt><dd>報告由下而上的 £16.5 億（NT$710 億）總數接近，但組成不同：報告有 38% 是企業 B2B，那是通路不是產品類別。兩個數字可以互相印證規模量級，不能逐項對帳。</dd></dl></details>
+  <p class="src">排除項目取自報告 5 節與附錄 B：處方藥、鴉片類、精神類安眠處方、SCS 植入、手術耗材、醫院級監測。保留比例除了「睡眠管理技術 50%」取自報告的居家監測佔比之外，都是本簡報的假設。</p>
+</section>
+
+<!-- 6 UK SOM -->
+<section class="slide gut" data-id="som" data-label="UK SOM" hidden>
+  <div>
+    <div class="eyebrow">§5 · UK SOM（可獲得市場）＝ SAM × 滲透率</div>
+    <h1 id="somTitle"></h1>
+  </div>
+  <div class="intent">
+    <div class="icard"><div class="ik">第 3 年 · 切入期</div><div class="ih">驗證模型</div><div class="iv num" id="int3"></div><p>一家倫敦旗艦中心加上線上 D2C，證明「中心建立信任、硬體延伸營收」這套閉環在英國跑得通。0.25% 大約是單店產能上限（約 1,200 名常客）加上線上用戶。</p></div>
+    <div class="icard"><div class="ik">第 5 年 · 成熟期</div><div class="ih">規模化</div><div class="iv num" id="int5"></div><p>擴到 2–3 家中心，再加上高端百貨與 10 家以上企業客戶，證明模型可以複製，在英國非醫材睡眠修復市場建立辨識度。</p></div>
+  </div>
+  <div class="grid2">
+    <div style="display:grid;gap:14px">
+      <div class="panel">
+        <h2>滲透率目標</h2>
+        <div id="slPen"></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
+          <span class="note">第 5 年情境：</span>
+          <div class="scen" id="scen"></div>
+        </div>
+      </div>
+      <div class="formula" id="somFormula"></div>
+    </div>
+    <div style="display:grid;gap:14px">
+      <div>
+        <h2>營收拆解（依報告各模組佔比）</h2>
+        <div class="tw"><table id="somTable"></table></div>
+      </div>
+      <p class="note"><b>產能檢查：</b>一家 4 間調理室的旗艦中心，全年約 4,500–5,000 人次；每位常客一年來 4 次，約可服務 1,200 名常客，佔 160 萬自費潛在客群的 0.075%。報告再加上線上 D2C 的科技衣與穿戴，把全生態推到 0.25% <span class="tag t-self">中·自述</span>。</p>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>逐年營收（進入英國後）</h2>
+    <div class="tw"><table id="yrTable"></table></div>
+  </div>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd><b>一年的營收</b>，不是累計。「第 3 年 NT$1.83 億」是切入期結束時每年約 NT$1.83 億，不必除以 3。</dd><dt>SOM 與營收</dt><dd>SOM 是<b>消費者端的銷售額</b>，本頁沿用報告的做法直接稱為營收。自營中心與品牌官網 D2C，消費者付多少智平衡就收多少，SOM 約等於營收；百貨、Boots 等零售通路會抽成（常見 30–50%），企業 B2B 視合約可能有平台或仲介費用，這部分的實際營收會低於 SOM。第 3 年以中心與線上為主，差距不大；第 5 年加入零售與企業通路後，實際營收可能明顯低於 SOM。</dd><dt>為什麼是一年</dt><dd>SAM 是年度市場規模（報告用「年均消費 £350」「年均軟硬體 £110」計算），SAM × 滲透率自然是年營收。報告的營收拆解也是年度量：中心約 1,200 名常客 × 年度套案 £1,000–1,500 ≈ £140 萬；穿戴約 2,000 名訂閱 × 每月 £12 ＋ 硬體 ≈ £38 萬。</dd><dt>時間軸</dt><dd>報告只給兩個時點：切入期（約第 3 年，0.25%）與成熟期（約第 5 年，0.90%），沒有逐年拆分。逐年表中的第 1、2、4 年是本簡報內插的估計值：第 1 年設為第 3 年的 33%（開設旗艦中心、建立通路的爬坡年，營收約為穩定後的三分之一）；第 2 年取第 1、3 年的中間值；第 4 年取第 3、5 年的中間值。缺的年份一律取前後兩個時點滲透率的中間值，整條路徑只用這一條規則。</dd><dt>滲透率依據</dt><dd>0.25% 對應約 4,000–5,000 名生態用戶，受限於一家旗艦中心的產能；0.90% 對應約 1.5–2 萬名用戶，靠 2–3 家中心加上百貨與 D2C 通路。第 5 年的三種情境取自報告附錄 D：保守 0.45%（報告的悲觀情境：經濟衰退、只靠線上 D2C）、持平 0.90%（報告的基準情境）、樂觀 1.60%（社群口碑引爆、拿下大型企業全員福利合約）。</dd></dl></details>
+  <p class="src">出處：報告 5.3 節、附錄 C、附錄 D。營收拆解沿用報告各模組的營收佔比，套用到本頁的 SOM；報告原表以其 SAM £16.5 億為基準，金額約低 3%。</p>
+</section>
+
+<!-- 7 rings -->
+<section class="slide gut" data-id="rings" data-label="同心圓" hidden>
+  <div>
+    <div class="eyebrow">§6 · UK 總潛在市場 TAM ⊃ 可服務市場 SAM ⊃ 可獲得市場 SOM</div>
+    <h1 id="ringTitle"></h1>
+  </div>
+  <div class="grid2">
+    <div class="panel rings"><svg id="ringSvg" viewBox="0 0 640 440" role="img" aria-label="UK TAM、SAM、SOM 同心圓，面積按比例"></svg></div>
+    <div style="display:grid;gap:14px">
+      <div class="kpis" id="ringKpis" style="grid-template-columns:minmax(0,1fr)"></div>
+      <p class="note">圓的面積照實際比例畫。SOM 很小是真實比例，沒有放大；滑過圓圈可以看數值。</p>
+    </div>
+  </div>
+  <details class="ctx"><summary><b>估算脈絡</b>這個數字怎麼來、怎麼讀</summary><dl><dt>口徑</dt><dd>三層都是<b>一年</b>的規模：TAM、SAM 是年度市場，SOM 是年營收。</dd><dt>畫法</dt><dd>圓的面積按實際比例畫；SOM 圈畫的是第 3 年與第 5 年兩個時點。</dd><dt>怎麼讀</dt><dd>TAM → SAM 的落差來自定位（不做藥物與醫材）；SAM → SOM 的落差來自執行能力（中心產能、通路數量）。兩段落差的原因不同，討論時可以分開看。</dd></dl></details>
+  <p class="src" id="ringSrc"></p>
+</section>
+
+
+<!-- 8 KPI -->
+<section class="slide gut" data-id="kpi" data-label="關鍵指標" hidden>
+  <div>
+    <div class="eyebrow">§7 · 關鍵指標</div>
+    <h1>關鍵指標</h1>
+  </div>
+  <div class="kgrid"><div class="kcol"><h2>市場</h2><ul><li>滲透率<span class="kref">§5</span></li></ul></div><div class="kcol"><h2>營收</h2><ul><li>年營收（SOM）<span class="kref">§5</span></li><li>營收年成長率<span class="kref">§5</span></li><li>各產品線營收佔比<span class="kref">§5</span></li><li>淨營收（扣除通路抽成）<span class="kref">§5</span></li></ul></div><div class="kcol"><h2>用戶與據點</h2><ul><li>活躍生態用戶數<span class="kref">§5</span></li><li>活躍用戶年成長率</li><li>中心數<span class="kref">§5</span></li><li>進入城市數</li></ul></div></div>
+  <details class="ctx"><summary><b>第二層指標</b></summary><div class="kgrid k2"><div class="kcol"><h2>人本中心</h2><ul><li>中心常客數</li><li>常客年回訪次數</li><li>中心產能滿載率</li></ul></div><div class="kcol"><h2>穿戴裝置</h2><ul><li>活躍訂閱數</li></ul></div><div class="kcol"><h2>在宅設備</h2><ul><li>銷售／租賃台數</li></ul></div><div class="kcol"><h2>智慧衣</h2><ul><li>年銷量</li></ul></div><div class="kcol"><h2>企業 B2B</h2><ul><li>簽約數</li></ul></div></div></details>
+  <details class="ctx"><summary><b>第三層指標</b></summary><div class="kgrid k2"><div class="kcol"><h2>財務</h2><ul><li>LTV／CAC</li><li>CAC 回收期</li><li>毛利率</li><li>經常性收入佔比</li></ul></div><div class="kcol"><h2>顧客</h2><ul><li>NPS</li><li>續訂率</li><li>跨品類購買率</li></ul></div><div class="kcol"><h2>營運</h2><ul><li>新店回本期</li><li>新產品線營收佔比</li></ul></div><div class="kcol"><h2>團隊</h2><ul><li>調理師人數與留任率</li><li>數據回饋處方比例</li><li>非醫材宣稱合規率</li></ul></div></div></details>
+</section>
+
+</main>
+
+<footer class="foot gut">
+  <div class="foot-in">
+    <button class="btn" type="button" id="prev">← 上一頁</button>
+    <span class="cnt" id="cnt"></span>
+    <button class="btn" type="button" id="next">下一頁 →</button>
+  </div>
+</footer>
+<div id="tip" hidden></div>
+
+<script>
+(function(){
+const FX = 1.27;
+const TWD = 43; // NT$ per £, mid-market 2026-11-23 ≈ 42.95
+// gbpYi: value in 億英鎊 → "≈ NT$… 億/萬"
+// primary: NT$ ; secondary note: £
+const nt = gbpYi=>{const v=gbpYi*TWD; return v>=100?`NT$${f(v)} 億`:v>=10?`NT$${f(v,1)} 億`:v>=1?`NT$${f(v,2)} 億`:`NT$${f(v*1e4)} 萬`;};
+const ntW = gbpWan=>nt(gbpWan/1e4);
+const gbS = gbpYi=>gbpYi>=1?`£${f(gbpYi,gbpYi>=10?1:2)} 億`:`£${f(gbpYi*1e4)} 萬`;
+const gb = gbpYi=>`<span class="twd">${gbS(gbpYi)}</span>`;
+const gbW = gbpWan=>gb(gbpWan/1e4);
+// aligned formula: rows [tagHtml, exprHtml, valueHtml], total [label, valueHtml] or null
+const fxHTML=(rows,total)=>{
+  const el=document.createElement('div');
+  let h=rows.map(([t,e,v])=>`<span class="t">${t||''}</span><span class="e">${e}</span><span class="v">${v||''}</span>`).join('');
+  if(total)h+=`<span class="hr"></span><span class="tot" style="grid-column:1/3">${total[0]}</span><span class="v r">${total[1]}</span>`;
+  return h;
+};
+const setFx=(id,rows,total)=>{const n=$(id);n.classList.add('fx');n.innerHTML=fxHTML(rows,total);};
+const SEG = [
+  {name:'睡眠健康消費品', g:750,  eu:210, year:2026, col:'var(--c1)', gTag:'t-ver'},
+  {name:'睡眠管理技術',   g:63,   eu:18,  year:2025, col:'var(--c2)', gTag:'t-ver'},
+  {name:'疼痛藥物與設備', g:753,  eu:null,year:2025, col:'var(--c3)', gTag:'t-ver'},
+  {name:'外用止痛與舒緩', g:124,  eu:null,year:2026, col:'var(--c4)', gTag:'t-ver'},
+  {name:'門診復健與身心調理', g:1000, eu:null,year:'—', col:'var(--c5)', gTag:'t-self'}
+];
+const KEEP = [
+  {anchor:.25, tag:'t-hyp', keep:'機能寢飾／服飾、居家放鬆設備', drop:'床墊、助眠保健食品、OTC 助眠藥'},
+  {anchor:.50, tag:'t-inf', keep:'消費級穿戴與居家監測（報告：居家佔比 2025 年 50%）', drop:'醫院 PSG 與臨床診斷設備'},
+  {anchor:0,   tag:'t-ver', keep:'無', drop:'處方藥、鴉片類、SCS 植入、射頻消融（報告明列排除）'},
+  {anchor:.20, tag:'t-hyp', keep:'非藥物物理舒緩（熱敷、加壓）', drop:'含藥貼片與凝膠'},
+  {anchor:.35, tag:'t-hyp', keep:'自費徒手調理、身心放鬆', drop:'醫院復健、NHS 物理治療'}
+];
+const TAG = {'t-ver':'查證','t-self':'中·自述','t-inf':'推論','t-hyp':'假設','t-none':'查無'};
+const REP_SAM = 16.5; // 億 GBP
+const REP_SOM = [
+  ['拉菲爾人本中心服務',140,450],['生命徵象穿戴及訂閱',38,175],['自主神經在宅設備',95,340],
+  ['智慧科技生活機能衣',110,400],['企業 B2B 福利與授權',29,120]
+];
+
+// slider defs
+const SL = {
+  eu:  {label:'歐洲佔全球比例（三項無拆分的市場）', anchor:.28, min:.15, max:.40, step:.005, band:[.25,.30], tag:'t-inf', pct:1, hint:'淺色帶 25–30%'},
+  uk:  {label:'UK 佔歐洲比例', anchor:.13, min:.06, max:.18, step:.005, band:[.09,.14], tag:'t-hyp', pct:1, hint:'淺色帶：人口 9% ～ 經濟 14%'},
+  k0:  {label:'睡眠健康消費品', anchor:.25, min:0, max:1, step:.05, tag:'t-hyp', pct:0},
+  k1:  {label:'睡眠管理技術', anchor:.50, min:0, max:1, step:.05, band:[.50,.58], tag:'t-inf', pct:0, hint:'報告：居家佔比 50%→58%'},
+  k2:  {label:'疼痛藥物與設備', anchor:0, min:0, max:.3, step:.05, tag:'t-ver', pct:0, hint:'報告明列排除'},
+  k3:  {label:'外用止痛與舒緩', anchor:.20, min:0, max:1, step:.05, tag:'t-hyp', pct:0},
+  k4:  {label:'門診復健與身心調理', anchor:.35, min:0, max:1, step:.05, tag:'t-hyp', pct:0},
+  p1:  {label:'切入期滲透率（約第 3 年）', anchor:.0025, min:.0005, max:.01, step:.0005, tag:'t-self', pct:2, hint:'報告：0.25%'},
+  p2:  {label:'成熟期滲透率（約第 5 年）', anchor:.009, min:.002, max:.02, step:.0005, tag:'t-self', pct:2, band:[.0045,.016], hint:'淺色帶：保守 0.45% ～ 樂觀 1.60%'}
+};
+const R1 = .33; // 第 1 年滲透率 = 第 3 年 × 33%
+const S = {}; Object.keys(SL).forEach(k=>S[k]=SL[k].anchor);
+let base = 'top';
+
+// ---------- helpers
+const $ = id=>document.getElementById(id);
+const f = (x,d=0)=>Number(x).toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct = (x,d=0)=>f(x*100,d)+'%';
+const tag = t=>`<span class="tag ${t}">${TAG[t]}</span>`;
+const fmtSl = k=>{const d=SL[k];return d.pct===2?pct(S[k],2):pct(S[k],d.pct===1?1:0);};
+
+function model(){
+  const eu = SEG.map(s=> s.eu!=null ? s.eu : s.g*S.eu);
+  const uk = eu.map(v=>v*S.uk);
+  const keep = [S.k0,S.k1,S.k2,S.k3,S.k4];
+  const sam = uk.map((v,i)=>v*keep[i]);
+  const gT = SEG.reduce((a,s)=>a+s.g,0), euT=sum(eu), ukT=sum(uk), samT=sum(sam);
+  const samG = samT/FX, ukG = ukT/FX;
+  const baseG = samG;
+  const y1=S.p1*R1, y3=S.p1, y2=(y1+y3)/2, y5=S.p2, y4=(y3+y5)/2;
+  const yp=[y1,y2,y3,y4,y5], yr=yp.map(v=>baseG*v*1e4);
+  return {eu,uk,keep,sam,gT,euT,ukT,samT,samG,ukG,baseG,som1:baseG*S.p1*1e4,som2:baseG*S.p2*1e4,yp,yr};
+}
+function sum(a){return a.reduce((x,y)=>x+y,0)}
+
+// ---------- sliders
+function sliderHTML(k){
+  const d=SL[k], p=v=>(v-d.min)/(d.max-d.min)*100;
+  const band = d.band?`<div class="sl-band" style="left:${p(d.band[0])}%;width:${p(d.band[1])-p(d.band[0])}%"></div>`:'';
+  return `<div class="sl" id="w_${k}"><div class="sl-h"><label for="r_${k}">${d.label}</label>${tag(d.tag)}<span class="sl-v" id="v_${k}"></span></div>
+  <div class="sl-trk">${band}<div class="sl-anchor" style="left:calc(${p(d.anchor)}% + ${(0.5-p(d.anchor)/100)*16}px)"></div>
+  <input type="range" id="r_${k}" min="${d.min}" max="${d.max}" step="${d.step}" value="${S[k]}"></div>
+  <div class="sl-f"><span>錨點 ${d.pct===2?pct(d.anchor,2):pct(d.anchor,d.pct===1?1:0)}${d.hint?' · '+d.hint:''}</span><button type="button" class="sl-reset" id="x_${k}" hidden>回到錨點</button></div></div>`;
+}
+function mount(id,keys){ $(id).insertAdjacentHTML('beforeend',keys.map(sliderHTML).join('')); }
+mount('slEu',['eu']); mount('slUk',['uk']); mount('slKeep',['k0','k1','k2','k3','k4']); mount('slPen',['p1','p2']);
+Object.keys(SL).forEach(k=>{
+  $('r_'+k).addEventListener('input',e=>{S[k]=+e.target.value;render();});
+  $('x_'+k).addEventListener('click',()=>{S[k]=SL[k].anchor;$('r_'+k).value=S[k];render();});
+});
+$('resetAll').addEventListener('click',()=>{Object.keys(SL).forEach(k=>{S[k]=SL[k].anchor;$('r_'+k).value=S[k];});render();});
+const SCEN=[['保守',.0045,'報告悲觀情境：只靠線上 D2C 也要守住'],['持平',.009,'報告基準情境'],['樂觀',.016,'報告樂觀情境：口碑引爆、拿下大型企業合約']];
+$('scen').innerHTML=SCEN.map(([n,v],i)=>`<button type="button" data-i="${i}" title="${SCEN[i][2]}">${n} ${pct(v,2)}</button>`).join('');
+$('scen').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.p2=SCEN[+b.dataset.i][1];$('r_p2').value=S.p2;render();});
+
+// ---------- tooltip
+const tip=$('tip');
+document.addEventListener('pointermove',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(!t){tip.hidden=true;return;}
+  tip.innerHTML=t.getAttribute('data-tip');tip.hidden=false;
+  const w=tip.offsetWidth,h=tip.offsetHeight;
+  let x=e.clientX+14,y=e.clientY+14;
+  if(x+w>innerWidth-8)x=e.clientX-w-14; if(y+h>innerHeight-8)y=e.clientY-h-14;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+});
+
+// ---------- render
+function render(){
+  const m=model();
+  // moved
+  let moved=0;
+  Object.keys(SL).forEach(k=>{
+    const on=Math.abs(S[k]-SL[k].anchor)>1e-9; if(on)moved++;
+    $('v_'+k).textContent=fmtSl(k); $('x_'+k).hidden=!on; $('w_'+k).classList.toggle('moved-on',on);
+  });
+  $('movedChip').textContent=moved?`${moved} 個假設已移動`:'全部在錨點';
+  $('movedChip').classList.toggle('on',moved>0);
+  $('resetAll').disabled=!moved;
+  document.querySelectorAll('#scen button').forEach(b=>b.setAttribute('aria-pressed',Math.abs(SCEN[+b.dataset.i][1]-S.p2)<1e-9));
+
+  // cover funnel
+  $('coverFunnel').innerHTML=[
+    ['全球 TAM · 2025–26','$'+f(m.gT)+' 億',''],['歐洲 TAM · 2025–26','$'+f(m.euT)+' 億',''],['UK TAM · 2025–26',nt(m.ukG),gb(m.ukG)],
+    ['UK SAM · 2025–26',nt(m.samG),gb(m.samG)],['UK SOM · 進入後第 5 年／年',ntW(m.som2),gbW(m.som2)]
+  ].map(([k,v,t],i)=>(i?'<span class="farrow">→</span>':'')+`<div class="fstep"><div class="k">${k}</div><div class="v num">${v}</div>${t}</div>`).join('');
+
+  // global
+  $('gBar').innerHTML=SEG.map(s=>`<div style="flex:${s.g};background:${s.col}" data-tip="${s.name}<br><span class='num'>$${f(s.g)} 億</span> · ${pct(s.g/m.gT,1)}"></div>`).join('');
+  $('gTable').innerHTML=`<tr><th>細分市場</th><th class="n">億美元</th><th class="n">佔比</th><th class="n">基準年</th><th>依據</th></tr>`+
+    SEG.map(s=>`<tr><td><span class="sw" style="background:${s.col}"></span>${s.name}</td><td class="n">${f(s.g)}</td><td class="n">${pct(s.g/m.gT,1)}</td><td class="n">${s.year}</td><td>${tag(s.gTag)}</td></tr>`).join('')+
+    `<tr class="sum"><td>合計</td><td class="n">${f(m.gT)}</td><td class="n">100%</td><td></td><td></td></tr>`;
+
+  // europe
+  const verT=228, infT=m.euT-verT;
+  $('euTitle').innerHTML=`歐洲 TAM（2025–26 年度）約 <span class="num">${f(m.euT)}</span> 億美元<span class="sub">228 億有報告數字，其餘按 ${pct(S.eu,1)} 推估</span>`;
+  $('euBar').innerHTML=SEG.map((s,i)=>`<div class="${s.eu==null?'hatch':''}" style="flex:${m.eu[i]};background-color:${s.col}" data-tip="${s.name}<br><span class='num'>$${f(m.eu[i])} 億</span> · ${s.eu==null?'推論':'查證'}"></div>`).join('');
+  $('euTable').innerHTML=`<tr><th>細分市場</th><th class="n">全球</th><th class="n">歐洲</th><th>依據</th></tr>`+
+    SEG.map((s,i)=>`<tr><td><span class="sw" style="background:${s.col}"></span>${s.name}</td><td class="n">${f(s.g)}</td><td class="n">${f(m.eu[i])}</td><td>${s.eu!=null?tag('t-ver')+' 報告 2.1 節':tag('t-inf')+' × '+pct(S.eu,1)}</td></tr>`).join('')+
+    `<tr class="sum"><td>合計</td><td class="n">${f(m.gT)}</td><td class="n">${f(m.euT)}</td><td class="note">佔全球 ${pct(m.euT/m.gT,1)}</td></tr>`;
+  setFx('euFormula',[
+    [tag('t-ver'),'睡眠消費品 <b>210</b> ＋ 睡眠科技 <b>18</b>（報告直接給）',`${f(verT)} 億`],
+    [tag('t-inf'),`（疼痛藥物與設備 <b>753</b> ＋ 外用止痛 <b>124</b> ＋ 門診復健 <b>1,000</b>）× <b>${pct(S.eu,1)}</b>`,`${f(infT)} 億`]
+  ],['歐洲 TAM',`≈ ${f(m.euT)} 億美元`]);
+
+  // UK TAM
+  $('ukTitle').innerHTML=`UK TAM（2025–26 年度）約 <span class="num">${nt(m.ukG)}</span><span class="sub">取歐洲 TAM 的 ${pct(S.uk,1)}</span>`;
+  $('ukTable').innerHTML=`<tr><th>細分市場</th><th class="n">歐洲（億美元）</th><th class="n">UK（億美元）</th><th class="n">UK（億台幣）</th><th class="n">UK（億英鎊）</th></tr>`+
+    SEG.map((s,i)=>`<tr><td><span class="sw" style="background:${s.col}"></span>${s.name}</td><td class="n">${f(m.eu[i])}</td><td class="n">${f(m.uk[i],1)}</td><td class="n">${f(m.uk[i]/FX*TWD)}</td><td class="n" style="color:var(--fg2)">${f(m.uk[i]/FX,1)}</td></tr>`).join('')+
+    `<tr class="sum"><td>合計</td><td class="n">${f(m.euT)}</td><td class="n">${f(m.ukT,1)}</td><td class="n">${f(m.ukG*TWD)}</td><td class="n" style="color:var(--fg2)">${f(m.ukG,1)}</td></tr>`;
+  setFx('ukFormula',[
+    [tag('t-hyp'),`歐洲 TAM <b>${f(m.euT)}</b> 億美元 × UK 佔比 <b>${pct(S.uk,1)}</b>`,`$${f(m.ukT,1)} 億`],
+    [tag('t-inf'),'換成英鎊：÷ 匯率 <b>1.27</b>',`£${f(m.ukG,1)} 億`],
+    [tag('t-ver'),'換成台幣：× 匯率 <b>43</b>',nt(m.ukG)]
+  ],['UK TAM',`≈ ${nt(m.ukG)}${gb(m.ukG)}`]);
+
+  // SAM
+  const dropShare=1-m.samT/m.ukT;
+  $('samTitle').innerHTML=`UK SAM（2025–26 年度）約 <span class="num">${nt(m.samG)}</span><span class="sub">智平衡能做 UK TAM 當中的 ${pct(1-dropShare)}</span>`;
+  $('samTable').innerHTML=`<tr><th>細分市場</th><th class="n">UK TAM</th><th class="n">保留</th><th class="n">SAM</th><th>保留／排除</th></tr>`+
+    SEG.map((s,i)=>`<tr class="${m.keep[i]===0?'dim':''}"><td><span class="sw" style="background:${s.col}"></span>${s.name}<div class="rbar"><i style="width:${m.keep[i]*100}%;background:${s.col}"></i></div></td><td class="n">${nt(m.uk[i]/FX)}${gb(m.uk[i]/FX)}</td><td class="n">${pct(m.keep[i])}</td><td class="n">${m.sam[i]?nt(m.sam[i]/FX)+gb(m.sam[i]/FX):'0'}</td><td class="note">${tag(KEEP[i].tag)} 留：${KEEP[i].keep}<br>扣：${KEEP[i].drop}</td></tr>`).join('')+
+    `<tr class="sum"><td>合計</td><td class="n">${nt(m.ukG)}${gb(m.ukG)}</td><td class="n">${pct(m.samT/m.ukT)}</td><td class="n">${nt(m.samG)}${gb(m.samG)}</td><td></td></tr>`;
+  setFx('samFormula',[
+    ['','UK TAM（總潛在市場）',nt(m.ukG)],
+    ['','− 智平衡不做的項目（藥物、侵入式醫材、醫院服務等）',`− ${nt(m.ukG-m.samG)}`]
+  ],['UK SAM',`≈ ${nt(m.samG)}${gb(m.samG)}`]);
+  $('cmpTop').innerHTML=nt(m.samG)+gb(m.samG);
+  const diff=(m.samG-REP_SAM)/REP_SAM;
+  $('cmpNote').innerHTML=`兩種算法差 <span class="delta">${diff>=0?'+':''}${pct(diff)}</span>。總數接近不代表結構一致：報告有 38% 來自企業 B2B，這是通路而不是產品類別，在由上而下的算法裡分散在五個細分市場中。`;
+
+  // SOM
+  $('int3').textContent=`滲透率 ${pct(S.p1,2)} → 年營收 ${ntW(m.som1)}`;
+  $('int5').textContent=`滲透率 ${pct(S.p2,2)} → 年營收 ${ntW(m.som2)}`;
+  $('somTitle').innerHTML=`UK SOM（進入英國後）<span class="sub">第 3 年約 <span class="num">${ntW(m.som1)}</span>／年（${gbS(m.som1/1e4)}），第 5 年約 <span class="num">${ntW(m.som2)}</span>／年（${gbS(m.som2/1e4)}）</span>`;
+  setFx('somFormula',[
+    ['','UK SAM（§4 算出的可服務市場）',`${nt(m.baseG)}${gb(m.baseG)}`],
+    [tag('t-self'),`第 3 年（切入期）年營收：SAM × <b>${pct(S.p1,2)}</b>`,`<span class="r">${ntW(m.som1)}</span>${gbW(m.som1)}`],
+    [tag('t-self'),`第 5 年（成熟期）年營收：SAM × <b>${pct(S.p2,2)}</b>`,`<span class="r">${ntW(m.som2)}</span>${gbW(m.som2)}`]
+  ],null);
+  const r1=sum(REP_SOM.map(r=>r[1])), r2=sum(REP_SOM.map(r=>r[2]));
+  $('somTable').innerHTML=`<tr><th>營收模組</th><th class="n">第 3 年／年</th><th class="n">第 5 年／年</th><th class="n">第 5 年佔比</th></tr>`+
+    REP_SOM.map(r=>{const a=r[1]/r1*m.som1, b=r[2]/r2*m.som2;return `<tr><td>${r[0]}</td><td class="n">${ntW(a)}${gbW(a)}</td><td class="n">${ntW(b)}${gbW(b)}</td><td class="n">${pct(r[2]/r2)}</td></tr>`;}).join('')+
+    `<tr class="sum"><td>合計</td><td class="n">${ntW(m.som1)}${gbW(m.som1)}</td><td class="n">${ntW(m.som2)}${gbW(m.som2)}</td><td class="n">100%</td></tr>`;
+  const ytag=['t-hyp','t-inf','t-self','t-inf','t-self'], yst=['切入期','切入期','切入期','成熟期','成熟期'];
+  const P=v=>pct(v,2), yp=m.yp;
+  const ysrc=[
+    `${P(yp[2])} × ${pct(R1)}<br><span style="color:var(--muted)">第 3 年的 ${pct(R1)}</span>`,
+    `(${P(yp[0])} ＋ ${P(yp[2])}) ÷ 2<br><span style="color:var(--muted)">第 1、3 年的中間值</span>`,
+    '報告設定',
+    `(${P(yp[2])} ＋ ${P(yp[4])}) ÷ 2<br><span style="color:var(--muted)">第 3、5 年的中間值</span>`,
+    '報告設定'];
+  const ymax=Math.max(...m.yr); let cum=0;
+  $('yrTable').innerHTML=`<tr><th>年</th><th>階段</th><th class="n">滲透率</th><th class="n">年營收</th><th class="n">累計</th><th>滲透率怎麼算</th></tr>`+
+    m.yr.map((v,i)=>{cum+=v;const sep=i===3?' style="border-top:1px solid var(--line2)"':'';
+      return `<tr${sep}><td class="num">第 ${i+1} 年</td><td>${yst[i]}</td><td class="n">${pct(m.yp[i],2)}</td><td class="n">${ntW(v)}${gbW(v)}<div class="rbar"><i style="width:${v/ymax*100}%;background:${i===2||i===4?'var(--hot)':'var(--accent)'}"></i></div></td><td class="n">${ntW(cum)}</td><td class="note">${tag(ytag[i])} ${ysrc[i]}</td></tr>`;}).join('');
+
+  // rings
+  renderRings(m);
+  $('ringTitle').innerHTML=`UK 總潛在市場（2025–26 年度）<span class="num">${nt(m.ukG)}</span><br>可服務 <span class="num">${nt(m.samG)}</span>（TAM 的 ${pct(m.samG/m.ukG)}）<br>進入後第 5 年每年可獲得 <span class="num">${ntW(m.som2)}</span>（SAM 的 ${pct(S.p2,2)}）`;
+  $('ringKpis').innerHTML=[
+    ['UK TAM 總潛在市場 · 2025–26 年度',nt(m.ukG)+gb(m.ukG),'歐洲 TAM × '+pct(S.uk,1)],
+    ['UK SAM 可服務市場 · 2025–26 年度',nt(m.samG)+gb(m.samG),'佔 TAM '+pct(m.samG/m.ukG,1)],
+    ['UK SOM 可獲得市場 · 進入後第 3／5 年',ntW(m.som1)+' → '+ntW(m.som2).replace('NT$','')+`<span class="twd">${gbS(m.som1/1e4)} → ${gbS(m.som2/1e4).replace('£','')}</span>`,'年營收：第 3 年 '+pct(S.p1,2)+' → 第 5 年 '+pct(S.p2,2)+' 的 SAM']
+  ].map(([k,v,s])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+  $('ringSrc').textContent=`英鎊：TAM ${gbS(m.ukG)}、SAM ${gbS(m.samG)}、SOM ${gbS(m.som1/1e4)}–${gbS(m.som2/1e4)}。美元：TAM $${f(m.ukT,1)} 億、SAM $${f(m.samT,1)} 億。匯率 £1 ≈ NT$43、£1 = $1.27。`;
+
+}
+
+function renderRings(m){
+  const cx=210,cy=220,R=200;
+  const rS=R*Math.sqrt(m.samG/m.ukG), r1=R*Math.sqrt(m.som1/1e4/m.ukG), r2=R*Math.sqrt(m.som2/1e4/m.ukG);
+  const cap=v=>Math.min(v,R);
+  const rs=cap(rS), q1=cap(r1), q2=cap(r2);
+  // labels with leader lines
+  const lab=(y,px,py,k,v,s)=>`<line x1="${px}" y1="${py}" x2="432" y2="${y}" style="stroke:var(--line2)" stroke-width="1"/><circle cx="${px}" cy="${py}" r="2.5" style="fill:var(--fg2)"/>
+    <text x="440" y="${y-6}" style="fill:var(--muted);font-family:var(--mono)" font-size="12">${k}</text>
+    <text x="440" y="${y+14}" style="fill:var(--fg);font-family:var(--mono)" font-size="17" font-weight="600">${v}</text>
+    <text x="440" y="${y+32}" style="fill:var(--fg2);font-family:var(--sans)" font-size="12">${s}</text>`;
+  const a=-0.6;
+  $('ringSvg').innerHTML=`
+    <circle cx="${cx}" cy="${cy}" r="${R}" style="fill:rgba(96,165,250,.08);stroke:var(--line2)" stroke-width="1" data-tip="UK TAM<br><span class='num'>${nt(m.ukG)}</span> · ${gbS(m.ukG)}"/>
+    <circle cx="${cx}" cy="${cy}" r="${rs}" style="fill:rgba(96,165,250,.28);stroke:var(--accent)" stroke-width="1.5" data-tip="UK SAM<br><span class='num'>${nt(m.samG)}</span> · ${gbS(m.samG)}<br>TAM 的 ${pct(m.samG/m.ukG,1)}"/>
+    <circle cx="${cx}" cy="${cy}" r="${Math.max(q2,1.5)}" style="fill:var(--hot);fill-opacity:.55;stroke:var(--hot)" stroke-width="1" data-tip="SOM 第 5 年年營收<br><span class='num'>${ntW(m.som2)}</span> · £${f(m.som2)} 萬<br>SAM 的 ${pct(S.p2,2)}"/>
+    <circle cx="${cx}" cy="${cy}" r="${Math.max(q1,1)}" style="fill:var(--hot);stroke:var(--bg)" stroke-width=".8" data-tip="SOM 第 3 年年營收<br><span class='num'>${ntW(m.som1)}</span> · £${f(m.som1)} 萬<br>SAM 的 ${pct(S.p1,2)}"/>
+    <circle cx="${cx}" cy="${cy}" r="18" style="fill:transparent" data-tip="SOM 年營收<br>第 3 年 ${ntW(m.som1)}<br>第 5 年 ${ntW(m.som2)}"/>
+    ${lab(60, cx+R*Math.cos(a), cy+R*Math.sin(a), 'UK TAM',nt(m.ukG),gbS(m.ukG))}
+    ${lab(180, cx+rs*Math.cos(-0.25), cy+rs*Math.sin(-0.25), 'UK SAM',nt(m.samG),gbS(m.samG)+' · TAM 的 '+pct(m.samG/m.ukG,1))}
+    ${lab(310, cx+q2*0.7, cy+q2*0.7, 'UK SOM',ntW(m.som1)+'–'+ntW(m.som2).replace('NT$',''),'£'+f(m.som1)+'–'+f(m.som2)+' 萬 · SAM 的 '+pct(S.p1,2)+'–'+pct(S.p2,2))}
+    <text x="${cx}" y="${cy+R-14}" text-anchor="middle" style="fill:var(--muted);font-family:var(--mono)" font-size="11">面積按比例</text>`;
+}
+
+// ---------- navigation
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+$('dots').innerHTML=slides.map((s,i)=>`<button type="button" class="dot" data-i="${i}" title="${s.dataset.label}">${['§0','§1','§2','§3','§4a','§4','§5','§6','§7'][i]}</button>`).join('');
+$('dots').addEventListener('click',e=>{const b=e.target.closest('.dot');if(b)go(+b.dataset.i);});
+function go(i,fromHash){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>{s.hidden=j!==cur;s.classList.toggle('enter',j===cur);});
+  document.querySelectorAll('.dot').forEach((d,j)=>d.setAttribute('aria-current',j===cur));
+  $('cnt').textContent=`${cur+1} / ${slides.length} · ${slides[cur].dataset.label}`;
+  $('prev').disabled=cur===0;$('next').disabled=cur===slides.length-1;
+  $('main').scrollTop=0;
+  if(!fromHash){const h='#'+slides[cur].dataset.id;if(location.hash!==h)history.replaceState(null,'',h);}
+}
+$('prev').addEventListener('click',()=>go(cur-1));
+$('next').addEventListener('click',()=>go(cur+1));
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);
+});
+function fromHash(){const id=location.hash.slice(1);const i=slides.findIndex(s=>s.dataset.id===id);go(i<0?0:i,true);}
+addEventListener('hashchange',fromHash);
+
+render();
+fromHash();
+})();
+</script>
+
+</body>
+</html>
